@@ -1,28 +1,47 @@
 let users = []
-let commets = []
+let posts = []
+let comments = []
+let albums = []
 
-async function getUser() {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users/4")
-    let json = await response.json()
-    users.push(json)
+async function getUsers() {
+    for (let i = 1; i < 11; i++) {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/users/${i}`)
+        let user = await response.json()
+        users.push(user)
+        let optionEl = document.createElement("option")
+        optionEl.value = user.username
+        optionEl.label = user.username
+        optionEl.addEventListener("onchange",
+            function() {
+                showUser(optionEl.label)
+            }
+        )
+        document.getElementById("usernames").appendChild(optionEl)
+    }
 }
+getUsers()
 
-getUser()
+async function getPosts() {
+    for (let i = 1; i < 101; i++) {
 
-async function getComment() {
-    const response = await fetch("https://jsonplaceholder.typicode.com/comments/1")
-    let json = await response.json()
-    let pEl = document.createElement("p")
-    pEl.textContent = JSON.stringify(json)
-    document.body.appendChild(pEl)
+    }
 }
+getPosts()
 
-getComment()
+async function getComments() {
+    for (let i = 1; i < 501; i++) {
 
-async function getAddress() {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users/4")
-    let json = await response.json()
-    console.log(json.address)
+    }
 }
+getComments()
 
-getAddress()
+async function getAlbums() {
+    for (let i = 1; i < 101; i++) {
+
+    }
+}
+getAlbums()
+
+function showUser(username) {
+    
+}
