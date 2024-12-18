@@ -51,42 +51,49 @@ async function getPhotos() {
 getPhotos()
 
 function loadUser(username) {
-    let userId = 0
-    let div = document.getElementById("posts")
-    div.innerHTML = ""
-    for (let i = 0; i < users.length; i++) {
-        if (users[i].username == username) {
-            userId = users[i].id
-        } else {
-            break
-        }
-    }
-    for (let i = 0; i < posts.length; i++) {
-        if (posts[i].userId == userId) {
-            let post = posts[i]
-            let body = post.body.replace(/\n/g, "<br>")
-            div.innerHTML += `<h3>${post.title}</h3><p>${body}</p>`
-        } else {
-            break
-        }
-    }
-    div = document.getElementById("albums")
-    div.innerHTML = ""
-    for (let i = 0; i < albums.length; i++) {
-        if (albums[i].userId == userId) {
-            let album = albums[i]            
-            div.innerHTML += `<h3>${album.title}</h3>`
-            for (let x = 50 * (album.id - 1); x < photos.length; x++) {
-                console.log(photos[x].id)
-                if (photos[x].albumId == album.id) {
-                    let img = `<img src="${photos[x].thumbnailUrl}"/>`
-                    div.innerHTML += `${img}`
-                } else {
-                    break
-                }
+    if (photos.length == 5000 || albums.length == 100) {
+        document.getElementById("loading").removeAttribute("src")
+        let userId = 0
+        let div = document.getElementById("posts")
+        div.innerHTML = ""
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].username == username) {
+                userId = users[i].id
+                break
             }
-        } else {
-            break
         }
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].userId == userId) {
+                let x = i
+                while (posts[x].userId == userId) {
+                    let post = posts[x]
+                    div.innerHTML += `<h3>${post.title}</h3><p>${post.body.replace(/\n/g, "<br>")}</p>`
+                    x++
+                }
+                break
+            }
+        }
+        div = document.getElementById("albums")
+        div.innerHTML = ""
+        for (let i = 0; i < albums.length; i++) {
+            if (albums[i].userId == userId) {
+                let x = i
+                while (albums[x].userId == userId) {
+                    let album = albums[x]            
+                    div.innerHTML += `<h3>${album.title}</h3>`
+                    for (let y = 50 * (album.id - 1); y < 50 * album.id; y++) {
+                        let img = `<img src="${photos[y].thumbnailUrl}"/>`
+                        div.innerHTML += `${img}`
+                    }
+                    x++
+                }
+                break
+            }
+        }
+    } else {
+        document.getElementById("loading").setAttribute("src", "img-src/loading.gif")
+        loadUser(username
+            DO SOMETHING WITH LIKE PROMISE OR SOMETHING
+        )
     }
 }
