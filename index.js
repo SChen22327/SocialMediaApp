@@ -1,7 +1,9 @@
 let users = []
 let posts = []
 let albums = []
-let photos = []
+let photos = new Array(5000)
+let userId = 0
+let loaded = false
 
 async function getUsers() {
     for (let i = 1; i < 11; i++) {
@@ -17,7 +19,9 @@ async function getUsers() {
         function(event) {
             var selectElement = event.target;
             var value = selectElement.value;
-            loadUser(value)
+            selectUser(value)
+            getPhotos()
+            loadUser()
         }
     )
 }
@@ -42,58 +46,54 @@ async function getAlbums() {
 getAlbums()
 
 async function getPhotos() {
-    for (let i = 1; i < 5001; i++) {
+    for (let i = 500 * (userId - 1); i < 500 * userId; i++) {
         const response = await fetch(`https://jsonplaceholder.typicode.com/photos/${i}`)
-        let photo = await response.json()
-        photos.push(photo)
+        photos[i - 1] = await response.json()
     }
 }
 getPhotos()
+.then (() => {
+    loaded = true
+    document.getElementById("loading").innerHTML = ""
+})
+function selectUser(username) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].username == username) {
+            userId = users[i].id
+            break
+        }
+    }
+}
 
-function loadUser(username) {
-    if (photos.length == 5000 || albums.length == 100) {
-        document.getElementById("loading").removeAttribute("src")
-        let userId = 0
-        let div = document.getElementById("posts")
-        div.innerHTML = ""
-        for (let i = 0; i < users.length; i++) {
-            if (users[i].username == username) {
-                userId = users[i].id
-                break
+function loadUser() {
+    let div = document.getElementById("posts")
+    div.innerHTML = ""
+    for (let i = 0; i < posts.length; i++) {
+        if (posts[i].userId == userId) {
+            let x = i
+            while (posts[x].userId == userId) {
+                let post = posts[x]
+                div.innerHTML += `<h3>${post.title}</h3><p>${post.body.replace(/\n/g, "<br>")}</p>`
+                x++
             }
+            break
         }
-        for (let i = 0; i < posts.length; i++) {
-            if (posts[i].userId == userId) {
-                let x = i
-                while (posts[x].userId == userId) {
-                    let post = posts[x]
-                    div.innerHTML += `<h3>${post.title}</h3><p>${post.body.replace(/\n/g, "<br>")}</p>`
-                    x++
+    }
+    div = document.getElementById("albums")
+    div.innerHTML = ""
+    for (let i = 0; i < albums.length; i++) {
+        if (albums[i].userId == userId) {
+            let x = i
+            while (albums[x].userId == userId) {
+                let album = albums[x]            
+                div.innerHTML += `<h3>${album.title}</h3>`
+                for (let y = 50 * (album.id - 1); y < 50 * album.id; y++) {
+                    let img = `<img src="${photos[y].thumbnailUrl}"/>`
+                    div.innerHTML += `${img}`
                 }
-                break
+                x++
             }
+            break
         }
-        div = document.getElementById("albums")
-        div.innerHTML = ""
-        for (let i = 0; i < albums.length; i++) {
-            if (albums[i].userId == userId) {
-                let x = i
-                while (albums[x].userId == userId) {
-                    let album = albums[x]            
-                    div.innerHTML += `<h3>${album.title}</h3>`
-                    for (let y = 50 * (album.id - 1); y < 50 * album.id; y++) {
-                        let img = `<img src="${photos[y].thumbnailUrl}"/>`
-                        div.innerHTML += `${img}`
-                    }
-                    x++
-                }
-                break
-            }
-        }
-    } else {
-        document.getElementById("loading").setAttribute("src", "img-src/loading.gif")
-        loadUser(username
-            DO SOMETHING WITH LIKE PROMISE OR SOMETHING
-        )
     }
 }
