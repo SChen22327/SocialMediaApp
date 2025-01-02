@@ -10,6 +10,9 @@ body {
 #albums {
     width: 50%;
 }
-img {
+#load-gif {
+    width: 50px;
+}
+#photo {
     width: 50px;
 }

@@ -3,7 +3,6 @@ let posts = []
 let albums = []
 let photos = new Array(5000)
 let userId = 0
-let loaded = false
 
 async function getUsers() {
     for (let i = 1; i < 11; i++) {
@@ -20,7 +19,6 @@ async function getUsers() {
             var selectElement = event.target;
             var value = selectElement.value;
             selectUser(value)
-            getPhotos()
             loadUser()
         }
     )
@@ -45,17 +43,13 @@ async function getAlbums() {
 }
 getAlbums()
 
-async function getPhotos() {
-    for (let i = 500 * (userId - 1); i < 500 * userId; i++) {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/photos/${i}`)
-        photos[i - 1] = await response.json()
+async function getPhotos(albumId) {
+    for (let i = 50 * (albumId - 1); i < 50 * albumId; i++) {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/photos/${i + 1}`)
+        photos[i] = await response.json()
     }
 }
-getPhotos()
-.then (() => {
-    loaded = true
-    document.getElementById("loading").innerHTML = ""
-})
+
 function selectUser(username) {
     for (let i = 0; i < users.length; i++) {
         if (users[i].username == username) {
@@ -65,7 +59,7 @@ function selectUser(username) {
     }
 }
 
-function loadUser() {
+async function loadUser() {
     let div = document.getElementById("posts")
     div.innerHTML = ""
     for (let i = 0; i < posts.length; i++) {
@@ -87,9 +81,10 @@ function loadUser() {
             while (albums[x].userId == userId) {
                 let album = albums[x]            
                 div.innerHTML += `<h3>${album.title}</h3>`
+                await getPhotos(album.id)
                 for (let y = 50 * (album.id - 1); y < 50 * album.id; y++) {
-                    let img = `<img src="${photos[y].thumbnailUrl}"/>`
-                    div.innerHTML += `${img}`
+                    let img = photos[y].thumbnailUrl
+                    div.innerHTML += `<img loading="lazy" id="photo" src="${img}"/>`
                 }
                 x++
             }
