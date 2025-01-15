@@ -6,13 +6,16 @@ body {
 }
 #posts {
     width: 50%;
+    padding: 15px;
+    background-color: #a1805e;
+    margin: 15px;
 }
 #albums {
     width: 50%;
+    padding: 15px;
+    background-color: #a1805e;
+    margin: 15px;
 }
-#load-gif {
-    width: 50px;
-}
-#photo {
-    width: 50px;
+h2 {
+    color: #4a3924;
 }
