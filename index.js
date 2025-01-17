@@ -57,11 +57,10 @@ async function loadUser() {
     div.innerHTML = `<h2>${users[userId-1].username}'s posts`
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].userId == userId) {
-            let x = i
-            while (posts[x].userId == userId) {
-                let post = posts[x]
+            while (posts[i].userId == userId) {
+                let post = posts[i]
                 div.innerHTML += `<h3>${post.title}</h3><p>${post.body.replace(/\n/g, "<br>")}</p>`
-                x++
+                i++
             }
             break
         }
@@ -70,11 +69,10 @@ async function loadUser() {
     div.innerHTML = `<h2>${users[userId-1].username}'s albums`
     for (let i = 0; i < albums.length; i++) {
         if (albums[i].userId == userId) {
-            let x = i
-            while (albums[x].userId == userId) {
-                let album = albums[x]            
+            while (albums[i].userId == userId) {
+                let album = albums[i]            
                 div.innerHTML += `<h3>${album.title}</h3>`
-                x++
+                i++
             }
             break
         }
